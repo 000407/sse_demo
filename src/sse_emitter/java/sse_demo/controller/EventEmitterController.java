@@ -12,6 +12,7 @@ import reactor.core.publisher.Flux;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.concurrent.ThreadLocalRandom;
 
 @RestController
 @Slf4j
@@ -33,5 +34,17 @@ public class EventEmitterController {
                         .event("periodic-event")
                         .data("SSE - " + LocalDateTime.now().toString())
                         .build());
+    }
+
+    @GetMapping(path = "/item")
+    public ResponseEntity<ServerSentEvent<String>> singleEvent() {
+        log.info("Received request for single event");
+        return ResponseEntity.ok(
+                ServerSentEvent.<String> builder()
+                        .id(String.valueOf(ThreadLocalRandom.current().nextInt(100, 200)))
+                        .event("periodic-event")
+                        .data("SSE - " + LocalDateTime.now().toString())
+                        .build()
+        );
     }
 }
