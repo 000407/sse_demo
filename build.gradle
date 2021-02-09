@@ -1,0 +1,41 @@
+plugins {
+    id 'org.springframework.boot' version '2.4.2'
+    id "io.freefair.lombok" version "5.3.0"
+    id 'java'
+}
+
+ext {
+    spring_boot_version="2.4.2"
+    lombok_version="1.18.12"
+}
+
+sourceSets {
+    sse_emitter {
+        java.srcDir file('src/sse_emitter/java')
+        resources.srcDir file('src/sse_emitter/resources')
+        compileClasspath += sourceSets.main.output + configurations.testRuntimeClasspath
+        runtimeClasspath += output + compileClasspath
+    }
+}
+
+group 'com.kaze2'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+//    implementation "org.springframework.boot:spring-boot-starter-web:${spring_boot_version}"
+    implementation "org.springframework.boot:spring-boot-starter-webflux:${spring_boot_version}"
+//    implementation "org.projectlombok:lombok:${lombok_version}"
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+
+//    annotationProcessor "org.projectlombok:lombok:${lombok_version}"
+}
+
+test {
+    useJUnitPlatform()
+}
