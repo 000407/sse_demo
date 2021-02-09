@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 
+import java.time.Duration;
+
 @Service
 @Slf4j
 public class EventService {
@@ -17,7 +19,7 @@ public class EventService {
         client = WebClient.create("http://localhost:8099");
     }
 
-    public Flux<ServerSentEvent<String>> consume() {
+    public Flux<ServerSentEvent<String>> consumeStream() {
         ParameterizedTypeReference<ServerSentEvent<String>> type = new ParameterizedTypeReference<>() {};
 
         return client.get()
@@ -25,5 +27,17 @@ public class EventService {
                 .accept(MediaType.TEXT_EVENT_STREAM)
                 .retrieve()
                 .bodyToFlux(type);
+    }
+
+    public Flux<ServerSentEvent<String>> createStream() {
+        ParameterizedTypeReference<ServerSentEvent<String>> type = new ParameterizedTypeReference<>() {};
+
+        return client.get()
+                .uri("/item")
+                .accept(MediaType.TEXT_EVENT_STREAM)
+                .retrieve()
+                .bodyToFlux(type)
+                .delaySubscription(Duration.ofSeconds(1))
+                .repeat();
     }
 }
