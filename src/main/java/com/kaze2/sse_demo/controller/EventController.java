@@ -1,5 +1,6 @@
 package com.kaze2.sse_demo.controller;
 
+import com.kaze2.sse_demo.dto.SomeDTO;
 import com.kaze2.sse_demo.service.EventService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,15 +41,13 @@ public class EventController {
     }
 
     @GetMapping(path = "/stream/item")
-    public Flux<ServerSentEvent<String>> streamRequest() {
+    public Flux<ServerSentEvent<SomeDTO>> streamRequest() {
         log.info("Received request to stream events from non-SSE source");
         return eventService.createStream()
                 .map(s -> {
-                    log.info("DATA: {}", s.data());
-                    return ServerSentEvent.<String> builder()
-                            .id("PROXY::" + Optional.ofNullable(s.id()).orElse("UNKNOWN_ID"))
-                            .event("PROXY::" + Optional.ofNullable(s.event()).orElse("UNKNOWN_EVENT"))
-                            .data("PROXY::" + s.data())
+                    log.info("DATA: {}", s);
+                    return ServerSentEvent.<SomeDTO> builder()
+                            .data(s)
                             .build();
                 });
     }

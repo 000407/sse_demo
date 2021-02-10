@@ -1,4 +1,4 @@
-package sse_demo.controller;
+package sse_emitter.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
+import sse_emitter.dto.SomeDTO;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.concurrent.ThreadLocalRandom;
 
 @RestController
 @Slf4j
@@ -37,14 +37,8 @@ public class EventEmitterController {
     }
 
     @GetMapping(path = "/item")
-    public ResponseEntity<ServerSentEvent<String>> singleEvent() {
+    public ResponseEntity<SomeDTO> singleEvent() {
         log.info("Received request for single event");
-        return ResponseEntity.ok(
-                ServerSentEvent.<String> builder()
-                        .id(String.valueOf(ThreadLocalRandom.current().nextInt(100, 200)))
-                        .event("periodic-event")
-                        .data("SSE - " + LocalDateTime.now().toString())
-                        .build()
-        );
+        return ResponseEntity.ok(new SomeDTO());
     }
 }

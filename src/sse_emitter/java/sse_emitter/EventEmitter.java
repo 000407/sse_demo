@@ -1,4 +1,4 @@
-package com.kaze2.sse_demo;
+package sse_emitter;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -6,8 +6,8 @@ import org.springframework.web.reactive.config.EnableWebFlux;
 
 @SpringBootApplication
 @EnableWebFlux
-public class Application {
+public class EventEmitter {
     public static void main(String[] args) {
-        SpringApplication.run(Application.class);
+        SpringApplication.run(EventEmitter.class);
     }
 }

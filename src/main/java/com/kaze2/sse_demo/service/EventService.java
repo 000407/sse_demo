@@ -1,5 +1,6 @@
 package com.kaze2.sse_demo.service;
 
+import com.kaze2.sse_demo.dto.SomeDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
@@ -29,12 +30,12 @@ public class EventService {
                 .bodyToFlux(type);
     }
 
-    public Flux<ServerSentEvent<String>> createStream() {
-        ParameterizedTypeReference<ServerSentEvent<String>> type = new ParameterizedTypeReference<>() {};
+    public Flux<SomeDTO> createStream() {
+        ParameterizedTypeReference<SomeDTO> type = new ParameterizedTypeReference<>() {};
 
         return client.get()
                 .uri("/item")
-                .accept(MediaType.TEXT_EVENT_STREAM)
+                .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .bodyToFlux(type)
                 .delaySubscription(Duration.ofSeconds(1))
