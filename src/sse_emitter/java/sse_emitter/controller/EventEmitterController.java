@@ -13,6 +13,7 @@ import sse_emitter.dto.SomeDTO;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.concurrent.ThreadLocalRandom;
 
 @RestController
 @Slf4j
@@ -28,12 +29,19 @@ public class EventEmitterController {
     @GetMapping(path = "/stream")
     public Flux<ServerSentEvent<String>> streamEvents() {
         log.info("Received request to stream events");
-        return Flux.interval(Duration.ofSeconds(1))
-                .map(sequence -> ServerSentEvent.<String> builder()
-                        .id(String.valueOf(sequence))
-                        .event("periodic-event")
-                        .data("SSE - " + LocalDateTime.now().toString())
-                        .build());
+        return Flux.interval(Duration.ofSeconds(2))
+                .map(sequence -> {
+                    try {
+                        Thread.sleep(ThreadLocalRandom.current().nextLong(100, 1000));
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                    return ServerSentEvent.<String> builder()
+                            .id(String.valueOf(sequence))
+                            .event("periodic-event")
+                            .data("SSE - " + LocalDateTime.now().toString())
+                            .build();
+                });
     }
 
     @GetMapping(path = "/item")
